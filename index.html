@@ -6,6 +6,9 @@
         <link rel="manifest" href="manifest.json">  <!-- Link zur Manifest-Datei -->
         <title>TSU Strafenkatalog</title>
         <link rel="stylesheet" href="styles.css">
+        <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-analytics.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js"></script>
         <style>
             /* Einfache Styles für die Navigation */
             nav {
@@ -106,6 +109,30 @@
     </footer>
    
     <script>
+        import { initializeApp } from "firebase/app";
+        import { getAnalytics } from "firebase/analytics";
+        import { getFirestore, collection, addDoc, getDocs } from "firebase/firestore";
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getFirestore(app); 
+
+        async function speichern() {
+        const spieler = document.getElementById("spielerSelect").value;
+        const betrag = parseInt(document.getElementById("betragSelect").value);
+
+        try {
+        // Füge eine neue Dokument in der "strafen" Sammlung hinzu
+        await addDoc(collection(db, "strafen"), {
+            name: spieler,
+            betrag: betrag
+        });
+        console.log("Strafe erfolgreich gespeichert!");
+        anzeigenStrafen();
+    } catch (error) {
+        console.error("Fehler beim Speichern der Strafe: ", error);
+    }
+}
+        
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
                 navigator.serviceWorker.register('service-worker.js').then(function(registration) {
@@ -215,6 +242,23 @@
             anzeigenStrafen();
             berechneGesamtBetrag();
         }
+
+        async function anzeigenStrafen() {
+        const strafeListe = document.getElementById("strafeListe");
+        strafeListe.innerHTML = ""; // Leere die Liste
+
+        try {
+            const querySnapshot = await getDocs(collection(db, "strafen"));
+            querySnapshot.forEach((doc) => {
+            const eintrag = document.createElement("li");
+            eintrag.textContent = `${doc.data().name}: ${doc.data().betrag} Euro`;
+            strafeListe.appendChild(eintrag);
+        });
+        } catch (error) {
+        console.error("Fehler beim Abrufen der Strafen: ", error);
+         }
+        }
+        
 
 
     function anzeigenStrafen() {
