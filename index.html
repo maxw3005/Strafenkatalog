@@ -265,11 +265,13 @@
         }
 
 
-    function anzeigenStrafen() {
+        function anzeigenStrafen() {
         const strafeListe = document.getElementById("strafeListe");
         strafeListe.innerHTML = ""; 
 
         for (let key in strafen) {
+        // Überprüfen, ob der Betrag größer als 0 ist
+            if (strafen[key].betrag > 0) {
             const eintrag = document.createElement("li");
             eintrag.textContent = `${strafen[key].name}: ${strafen[key].betrag} Euro`;
 
@@ -281,8 +283,10 @@
 
             eintrag.appendChild(resetButton);
             strafeListe.appendChild(eintrag);
+            }
         }
     }
+
 
     function berechneGesamtBetrag() {
         let gesamt = 0;
