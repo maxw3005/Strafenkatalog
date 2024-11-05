@@ -7,7 +7,7 @@
         <title>TSU Strafenkatalog</title>
         <link rel="stylesheet" href="styles.css">
         <style>
-            /* Einfache Styles für die Navigation */
+        
             nav {
                 background-color: #333;
                 padding: 10px;
@@ -158,15 +158,22 @@
 
         // Überprüfen, ob der Benutzer angemeldet ist
         function checkLoginStatus() {
-            const loggedInUser = localStorage.getItem('loggedInUser');
-            if (loggedInUser) {
-                // Benutzer ist angemeldet, Zeige die Strafe-Sektion
-                document.getElementById("login").style.display = "none";
-                document.getElementById("contact").style.display = "block";
-                anzeigenStrafen(); // Zeige die Strafen sofort nach dem Login
-                berechneGesamtBetrag(); // Berechne den Gesamtbetrag sofort nach dem Login
-            }
+        const loggedInUser = localStorage.getItem('loggedInUser');
+        if (loggedInUser) {
+            document.getElementById("login").style.display = "none";
+            document.getElementById("about").style.display = "block";
+        
+        if (loggedInUser === "TR") {
+            document.getElementById("contact").style.display = "none";
+        } else {
+            document.getElementById("contact").style.display = "block";
         }
+
+        anzeigenStrafen();
+        berechneGesamtBetrag();
+        }
+        }
+
 
         // Funktion für den Login
         function login() {
@@ -194,10 +201,10 @@
             document.getElementById("contact").style.display = "block";
         }
 
-    } else {
+        } else {
         loginMessage.textContent = "Ungültiger Benutzername oder Passwort.";
-    }
-}
+        }
+        }
 
         function speichern() {
             const spieler = document.getElementById("spielerSelect").value;
@@ -234,7 +241,7 @@
 
         for (let key in strafen) {
             const eintrag = document.createElement("li");
-            eintrag.textContent = ${strafen[key].name}: ${strafen[key].betrag} Euro ;
+            eintrag.textContent = `${strafen[key].name}: ${strafen[key].betrag} Euro`;
 
             const resetButton = document.createElement("button");
             resetButton.textContent = "Zurücksetzen";
