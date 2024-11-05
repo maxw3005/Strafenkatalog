@@ -6,7 +6,6 @@
         <link rel="manifest" href="manifest.json">  <!-- Link zur Manifest-Datei -->
         <title>TSU Strafenkatalog</title>
         <link rel="stylesheet" href="styles.css">
-        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@latest/dist/umd/supabase.js"></script>
         <style>
         
             nav {
@@ -120,9 +119,6 @@
     </footer>
    
     <script>
-        const supabaseUrl = 'https://znnrwxsiahudccagpwzy.supabase.co'; // Ersetze mit deiner Supabase-URL
-        const supabaseKey = '<eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpubnJ3eHNpYWh1ZGNjYWdwd3p5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzA4MTgyODgsImV4cCI6MjA0NjM5NDI4OH0.ddAflgAtAwZBZZqLdl8rDNNE3zUYRdW0x5sA-mROndI>'; // Ersetze mit deinem Supabase-Anon-Schlüssel
-        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
                 navigator.serviceWorker.register('service-worker.js').then(function(registration) {
@@ -210,16 +206,10 @@
 
 
         // Funktion für den Login
-        async function login() {
+        function login() {
         const username = document.getElementById("username").value;
         const password = document.getElementById("password").value;
         const loginMessage = document.getElementById("loginMessage");
-
-        const { user, error } = await supabase.auth.signIn({
-        email: username, // Benutzername wird hier als E-Mail verwendet
-        password: password, // Passwort vom Eingabefeld
-        });
-
 
         if (users[username] && users[username] === password) {
             loginMessage.textContent = "Login erfolgreich!";
@@ -244,7 +234,6 @@
         } else {
         loginMessage.textContent = "Ungültiger Benutzername oder Passwort.";
         }
-        checkLoginStatus();
         }
 
         function speichern() {
