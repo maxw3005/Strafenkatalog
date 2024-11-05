@@ -1,0 +1,21 @@
+{
+    "name": "TSU Strafenkatalog",
+    "short_name": "Strafenkatalog",
+    "start_url": "Strafenkatalog.html",  
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#333333",
+    "description": "Eine Anwendung zur Verwaltung von Strafen.",
+    "icons": [
+        {
+            "src": "Images/Logo-TSU.png",  
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "Images/Logo-TSU.png",  
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}

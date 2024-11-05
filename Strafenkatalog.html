@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="de">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="manifest" href="manifest.json">  <!-- Link zur Manifest-Datei -->
+        <title>TSU Strafenkatalog</title>
+        <link rel="stylesheet" href="styles.css">
+        <style>
+            /* Einfache Styles für die Navigation */
+            nav {
+                background-color: #333;
+                padding: 10px;
+            }
+            nav a {
+                color: white;
+                margin: 0 15px;
+                text-decoration: none;
+            }
+            nav a:hover {
+                text-decoration: underline;
+            }
+        </style>
+    </head>
+<body>
+    <header>
+        <h1>TSU Strafenkatalog</h1>
+        <img src="c:\Users\Anwender\Desktop\Logo-TSU.png" alt="" style="max-width: 5%; height: auto;">
+    </header>
+
+    <nav>
+        <a href="TSU-Strafen.pdf" target="_blank">Strafenkatalog</a> >
+        <a href="TSU-Geburtstagskalender.pdf" target="_blank">Geburtstagskalender</a> >
+    </nav>
+
+    <main>
+        <section id="login">
+            <h2>Benutzeranmeldung</h2>
+            <form id="loginForm">
+                <label for="username">Benutzername:</label>
+                <input type="text" id="username" name="username" required>
+                
+                <label for="password">Passwort:</label>
+                <input type="password" id="password" name="password" required>
+                
+                <button type="button" onclick="login()">Einloggen</button>
+            </form>
+            <p id="loginMessage"></p>
+        </section>
+
+        <section id="about">
+            <h2>Offener Betrag</h2>
+            <p>Gesamter Betrag der offenen Strafen: <span id="gesamtBetrag">0</span> Euro</p>
+            <button onclick="logout()">Abmelden</button>
+        </section>
+
+        <section id="contact" style="display:none;"> 
+            <h2>Strafe anlegen</h2>
+            <p>Wähle hier den Spieler und den Betrag</p>
+        
+            <form id="strafeFormular">
+                <label for="spielerSelect">Spieler:</label>
+                <select id="spielerSelect" name="spieler">
+                    <option value="" disabled selected>-- Wähle einen Spieler --</option>
+                    <option value="gerald">Gerald Probst</option>
+                    <option value="maximilianw">Maximilian Weber</option>
+                    <option value="manuelh">Manuel Hitzginger</option>
+                    <option value="manueld">Manuel Duller</option>
+                    <option value="alexanderd">Alexander Duller</option>
+                    <option value="manuelb">Manuel Braunsberger</option>
+                    <option value="manuelf">Manuel Fruhwald</option>
+                    <option value="alexanderl">Alexander Leucuta</option>
+                    <option value="ivani">Ivan Iliev</option>
+                    <option value="maximb">Maxim Biro</option>
+                    <option value="tobiash">Tobias Hitzginger</option>
+                    <option value="roberte">Robert Eichberger</option>
+                    <option value="timor">Timo Russinger</option>
+                    <option value="tobiasst">Tobias Strobl</option>
+                    <option value="noahm">Noah Meckl</option>
+                    <option value="davido">David Oberbacher</option>
+                    <option value="janisa">Janis Auer</option>
+                    <option value="jonast">Jonas Taubenböck</option>
+                    <option value="guentherh">Günther Hinterhofer</option>
+                    <option value="fabians">Fabian Schacherbauer</option>
+                </select>
+        
+                <label for="betragSelect">Betrag:</label>
+                <select id="betragSelect" name="betrag">
+                    <option value="" disabled selected>-- Wähle einen Betrag --</option>
+                    <option value="5">5 Euro</option>
+                    <option value="10">10 Euro</option>
+                    <option value="20">20 Euro</option>
+                    <option value="30">30 Euro</option>
+                    <option value="50">50 Euro</option>
+                </select>
+                <button type="button" id="saveButton" onclick="speichern()">Speichern</button>
+            </form>
+
+            <h3>Aktuelle Strafen</h3>
+            <ul id="strafeListe"></ul>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Maximilian Weber. Alle Rechte vorbehalten.</p>
+    </footer>
+   
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('service-worker.js').then(function(registration) {
+                    console.log('Service Worker registriert mit dem Scope:', registration.scope);
+                }, function(error) {
+                    console.log('Service Worker Registrierung fehlgeschlagen:', error);
+                });
+            });
+        }
+        // Benutzeranmeldung simulieren
+
+        if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("/service-worker.js")
+         .then(registration => {
+        console.log("Service Worker registriert mit Scope:", registration.scope);
+         })
+         .catch(error => {
+        console.error("Service Worker Registrierung fehlgeschlagen:", error);
+         });
+        }
+
+        const users = {
+            "TSU-SK": "itsajoke",
+            "TR": "geraldp"
+        };
+
+        // Strafen initialisieren aus local storage oder Standardwerte
+        const strafen = JSON.parse(localStorage.getItem('strafen')) || {
+            "gerald": { name: "Gerald Probst", betrag: 0 },
+            "maximilianw": { name: "Maximilian Weber", betrag: 0 },
+            "manuelh": { name: "Manuel Hitzginger", betrag: 0 },
+            "manueld": { name: "Manuel Duller", betrag: 0 },
+            "alexanderd": { name: "Alexander Duller", betrag: 0 },
+            "manuelb": { name: "Manuel Braunsberger", betrag: 0 },
+            "manuelf": { name: "Manuel Fruhwald", betrag: 0 },
+            "alexanderl": { name: "Alexander Leucuta", betrag: 0 },
+            "ivani": { name: "Ivan Iliev", betrag: 0 },
+            "maximb": { name: "Maxim Biro", betrag: 0 },
+            "tobiash": { name: "Tobias Hitzginger", betrag: 0 },
+            "roberte": { name: "Robert Eichberger", betrag: 0 },
+            "timor": { name: "Timo Russinger", betrag: 0 },
+            "tobiasst": { name: "Tobias Strobl", betrag: 0 },
+            "noahm": { name: "Noah Meckl", betrag: 0 },
+            "davido": { name: "David Oberbacher", betrag: 0 },
+            "janisa": { name: "Janis Auer", betrag: 0 },
+            "jonast": { name: "Jonas Taubenböck", betrag: 0 },
+            "guentherh": { name: "Günther Hinterhofer", betrag: 0 },
+            "fabians": { name: "Fabian Schacherbauer", betrag: 0 }
+        };
+
+        // Überprüfen, ob der Benutzer angemeldet ist
+        function checkLoginStatus() {
+            const loggedInUser = localStorage.getItem('loggedInUser');
+            if (loggedInUser) {
+                // Benutzer ist angemeldet, Zeige die Strafe-Sektion
+                document.getElementById("login").style.display = "none";
+                document.getElementById("contact").style.display = "block";
+                anzeigenStrafen(); // Zeige die Strafen sofort nach dem Login
+                berechneGesamtBetrag(); // Berechne den Gesamtbetrag sofort nach dem Login
+            }
+        }
+
+        // Funktion für den Login
+        function login() {
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+            const loginMessage = document.getElementById("loginMessage");
+
+            if (users[username] && users[username] === password) {
+                loginMessage.textContent = "Login erfolgreich!";
+                // Anmeldestatus speichern
+                localStorage.setItem('loggedInUser', username);
+                // Login-Sektion ausblenden und Strafensektion anzeigen
+                document.getElementById("login").style.display = "none";
+                document.getElementById("contact").style.display = "block";
+                anzeigenStrafen(); // Zeige die Strafen sofort nach dem Login
+                berechneGesamtBetrag(); // Berechne den Gesamtbetrag sofort nach dem Login
+            } else {
+                loginMessage.textContent = "Ungültiger Benutzername oder Passwort.";
+            }
+        }
+
+        function speichern() {
+            const spieler = document.getElementById("spielerSelect").value;
+            const betrag = parseInt(document.getElementById("betragSelect").value);
+
+            if (strafen[spieler]) {
+                strafen[spieler].betrag += betrag;
+            }
+
+            // Speichern der Strafen im Local Storage
+            localStorage.setItem('strafen', JSON.stringify(strafen));
+
+            document.getElementById("strafeFormular").reset();
+            anzeigenStrafen();
+            berechneGesamtBetrag();
+        }
+
+        function zuruecksetzenStrafe(spieler) {
+            if (strafen[spieler]) {
+                strafen[spieler].betrag = 0;
+            }
+
+            // Speichern der Strafen im Local Storage
+            localStorage.setItem('strafen', JSON.stringify(strafen));
+
+            anzeigenStrafen();
+            berechneGesamtBetrag();
+        }
+
+
+    function anzeigenStrafen() {
+        const strafeListe = document.getElementById("strafeListe");
+        strafeListe.innerHTML = ""; 
+
+        for (let key in strafen) {
+            const eintrag = document.createElement("li");
+            eintrag.textContent = `${strafen[key].name}: ${strafen[key].betrag} Euro `;
+
+            const resetButton = document.createElement("button");
+            resetButton.textContent = "Zurücksetzen";
+            resetButton.onclick = function() {
+                zuruecksetzenStrafe(key);
+            };
+
+            eintrag.appendChild(resetButton);
+            strafeListe.appendChild(eintrag);
+        }
+    }
+
+    function berechneGesamtBetrag() {
+        let gesamt = 0;
+        for (let key in strafen) {
+            gesamt += strafen[key].betrag;
+        }
+
+        document.getElementById("gesamtBetrag").textContent = gesamt;
+    }
+
+    // Funktion zum Abmelden
+    function logout() {
+        localStorage.removeItem('loggedInUser');
+        location.reload(); // Die Seite neu laden, um den Anmeldestatus zu aktualisieren
+    }
+
+    // Überprüfen des Anmeldestatus beim Laden der Seite
+    window.onload = function() {
+        checkLoginStatus();
+    };
+
+    // Initiale Anzeige der Strafen und Gesamtbetrag
+    anzeigenStrafen();
+    berechneGesamtBetrag();
+        
+    </script>
+</body>
+</html>
