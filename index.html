@@ -146,41 +146,41 @@
         };
 
         // Strafen initialisieren aus local storage oder Standardwerte
-        const strafen = JSON.parse(localStorage.getItem('strafen')) || {
-            "gerald": { name: "Gerald Probst", betrag: 0 },
-            "maximilianw": { name: "Maximilian Weber", betrag: 0 },
-            "manuelh": { name: "Manuel Hitzginger", betrag: 0 },
-            "manueld": { name: "Manuel Duller", betrag: 0 },
-            "alexanderd": { name: "Alexander Duller", betrag: 0 },
-            "manuelb": { name: "Manuel Braunsberger", betrag: 0 },
-            "manuelf": { name: "Manuel Fruhwald", betrag: 0 },
-            "alexanderl": { name: "Alexander Leucuta", betrag: 0 },
-            "ivani": { name: "Ivan Iliev", betrag: 0 },
-            "maximb": { name: "Maxim Biro", betrag: 0 },
-            "tobiash": { name: "Tobias Hitzginger", betrag: 0 },
-            "roberte": { name: "Robert Eichberger", betrag: 0 },
-            "timor": { name: "Timo Russinger", betrag: 0 },
-            "tobiasst": { name: "Tobias Strobl", betrag: 0 },
-            "noahm": { name: "Noah Meckl", betrag: 0 },
-            "davido": { name: "David Oberbacher", betrag: 0 },
-            "janisa": { name: "Janis Auer", betrag: 0 },
-            "jonast": { name: "Jonas Taubenböck", betrag: 0 },
-            "guentherh": { name: "Günther Hinterhofer", betrag: 0 },
-            "fabians": { name: "Fabian Schacherbauer", betrag: 0 }
-            "petara": { name: "Petar Alyoshev", betrag: 0 },
-            "safetm": { name: "Safet Memisevic", betrag: 0 },
-            "maximilianalt": { name: "Maximilian Alt", betrag: 0 },
-            "krasimir": { name: "Krasimir Balinski", betrag: 0 },
-            "danield": { name: "Daniel Danninger", betrag: 0 },
-            "marcelk": { name: "Marcel Krammer", betrag: 0 },
-            "devids": { name: "Devid Stanisavljevic", betrag: 0 },
-            "ahmetf": { name: "Ahmet Ferizovic", betrag: 0 },
-            "florian": { name: "Florian Schießtl", betrag: 0 },
-            "christianf": { name: "Christian Fuchs", betrag: 0 },
-            "felizz": { name: "Feliz Zöhrer", betrag: 0 },
-            "stefanp": { name: "Stefan Pommer", betrag: 0 },
-            "andreas": { name: "Andreas Schießtl", betrag: 0 }
-        };
+       const strafen = JSON.parse(localStorage.getItem('strafen')) || {
+    "gerald": { name: "Gerald Probst", betrag: 0 },
+    "maximilianw": { name: "Maximilian Weber", betrag: 0 },
+    "manuelh": { name: "Manuel Hitzginger", betrag: 0 },
+    "manueld": { name: "Manuel Duller", betrag: 0 },
+    "alexanderd": { name: "Alexander Duller", betrag: 0 },
+    "manuelb": { name: "Manuel Braunsberger", betrag: 0 },
+    "manuelf": { name: "Manuel Fruhwald", betrag: 0 },
+    "alexanderl": { name: "Alexander Leucuta", betrag: 0 },
+    "ivani": { name: "Ivan Iliev", betrag: 0 },
+    "maximb": { name: "Maxim Biro", betrag: 0 },
+    "tobiash": { name: "Tobias Hitzginger", betrag: 0 },
+    "roberte": { name: "Robert Eichberger", betrag: 0 },
+    "timor": { name: "Timo Russinger", betrag: 0 },
+    "tobiasst": { name: "Tobias Strobl", betrag: 0 },
+    "noahm": { name: "Noah Meckl", betrag: 0 },
+    "davido": { name: "David Oberbacher", betrag: 0 },
+    "janisa": { name: "Janis Auer", betrag: 0 },
+    "jonast": { name: "Jonas Taubenböck", betrag: 0 },
+    "guentherh": { name: "Günther Hinterhofer", betrag: 0 },
+    "fabians": { name: "Fabian Schacherbauer", betrag: 0 }, // Komma hinzugefügt
+    "petara": { name: "Petar Alyoshev", betrag: 0 },
+    "safetm": { name: "Safet Memisevic", betrag: 0 },
+    "maximilianalt": { name: "Maximilian Alt", betrag: 0 },
+    "krasimir": { name: "Krasimir Balinski", betrag: 0 },
+    "danield": { name: "Daniel Danninger", betrag: 0 },
+    "marcelk": { name: "Marcel Krammer", betrag: 0 },
+    "devids": { name: "Devid Stanisavljevic", betrag: 0 },
+    "ahmetf": { name: "Ahmet Ferizovic", betrag: 0 },
+    "florian": { name: "Florian Schießtl", betrag: 0 },
+    "christianf": { name: "Christian Fuchs", betrag: 0 },
+    "felizz": { name: "Feliz Zöhrer", betrag: 0 },
+    "stefanp": { name: "Stefan Pommer", betrag: 0 },
+    "andreas": { name: "Andreas Schießtl", betrag: 0 }
+};
 
         // Überprüfen, ob der Benutzer angemeldet ist
        function checkLoginStatus() {
