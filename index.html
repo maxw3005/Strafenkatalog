@@ -170,23 +170,34 @@
 
         // Funktion für den Login
         function login() {
-            const username = document.getElementById("username").value;
-            const password = document.getElementById("password").value;
-            const loginMessage = document.getElementById("loginMessage");
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+        const loginMessage = document.getElementById("loginMessage");
 
-            if (users[username] && users[username] === password) {
-                loginMessage.textContent = "Login erfolgreich!";
-                // Anmeldestatus speichern
-                localStorage.setItem('loggedInUser', username);
-                // Login-Sektion ausblenden und Strafensektion anzeigen
-                document.getElementById("login").style.display = "none";
-                document.getElementById("contact").style.display = "block";
-                anzeigenStrafen(); // Zeige die Strafen sofort nach dem Login
-                berechneGesamtBetrag(); // Berechne den Gesamtbetrag sofort nach dem Login
-            } else {
-                loginMessage.textContent = "Ungültiger Benutzername oder Passwort.";
-            }
+        if (users[username] && users[username] === password) {
+            loginMessage.textContent = "Login erfolgreich!";
+            localStorage.setItem('loggedInUser', username);
+
+        
+            document.getElementById("login").style.display = "none";
+        
+       
+            document.getElementById("about").style.display = "block";
+            anzeigenStrafen();
+            berechneGesamtBetrag();
+
+        
+        if (username === "TR") {
+            document.getElementById("contact").style.display = "none";
+            loginMessage.textContent += " Hinweis: Sie haben keine Berechtigung, eine Strafe anzulegen.";
+        } else {
+            document.getElementById("contact").style.display = "block";
         }
+
+    } else {
+        loginMessage.textContent = "Ungültiger Benutzername oder Passwort.";
+    }
+}
 
         function speichern() {
             const spieler = document.getElementById("spielerSelect").value;
