@@ -34,7 +34,6 @@
     </nav>
 
     <main>
-         <!-- Login-Sektion -->
         <section id="login">
             <h2>Benutzeranmeldung</h2>
             <form id="loginForm">
@@ -49,14 +48,12 @@
             <p id="loginMessage"></p>
         </section>
 
-        <!-- Offener Betrag (Versteckt ohne Login) -->
-        <section id="about" style="display:none;">
+        <section id="about">
             <h2>Offener Betrag</h2>
             <p>Gesamter Betrag der offenen Strafen: <span id="gesamtBetrag">0</span> Euro</p>
             <button onclick="logout()">Abmelden</button>
         </section>
 
-        <!-- Strafen-Sektion (Versteckt ohne Login) -->
         <section id="contact" style="display:none;"> 
             <h2>Strafe anlegen</h2>
             <p>Wähle hier den Spieler und den Betrag</p>
@@ -65,7 +62,26 @@
                 <label for="spielerSelect">Spieler:</label>
                 <select id="spielerSelect" name="spieler">
                     <option value="" disabled selected>-- Wähle einen Spieler --</option>
-                    <!-- Optionen hier belassen -->
+                    <option value="gerald">Gerald Probst</option>
+                    <option value="maximilianw">Maximilian Weber</option>
+                    <option value="manuelh">Manuel Hitzginger</option>
+                    <option value="manueld">Manuel Duller</option>
+                    <option value="alexanderd">Alexander Duller</option>
+                    <option value="manuelb">Manuel Braunsberger</option>
+                    <option value="manuelf">Manuel Fruhwald</option>
+                    <option value="alexanderl">Alexander Leucuta</option>
+                    <option value="ivani">Ivan Iliev</option>
+                    <option value="maximb">Maxim Biro</option>
+                    <option value="tobiash">Tobias Hitzginger</option>
+                    <option value="roberte">Robert Eichberger</option>
+                    <option value="timor">Timo Russinger</option>
+                    <option value="tobiasst">Tobias Strobl</option>
+                    <option value="noahm">Noah Meckl</option>
+                    <option value="davido">David Oberbacher</option>
+                    <option value="janisa">Janis Auer</option>
+                    <option value="jonast">Jonas Taubenböck</option>
+                    <option value="guentherh">Günther Hinterhofer</option>
+                    <option value="fabians">Fabian Schacherbauer</option>
                 </select>
         
                 <label for="betragSelect">Betrag:</label>
@@ -207,7 +223,7 @@
 
         for (let key in strafen) {
             const eintrag = document.createElement("li");
-            eintrag.textContent = `${strafen[key].name}: ${strafen[key].betrag} Euro `;
+            eintrag.textContent = ${strafen[key].name}: ${strafen[key].betrag} Euro ;
 
             const resetButton = document.createElement("button");
             resetButton.textContent = "Zurücksetzen";
