@@ -157,21 +157,25 @@
         };
 
         // Überprüfen, ob der Benutzer angemeldet ist
-        function checkLoginStatus() {
-        const loggedInUser = localStorage.getItem('loggedInUser');
-        if (loggedInUser) {
-            document.getElementById("login").style.display = "none";
-            document.getElementById("about").style.display = "block";
+       function checkLoginStatus() {
+            const loggedInUser = localStorage.getItem('loggedInUser');
+            if (loggedInUser) {
+                document.getElementById("login").style.display = "none";
+                document.getElementById("about").style.display = "block";
         
-        if (loggedInUser === "TR") {
-            document.getElementById("contact").style.display = "none";
-        } else {
-            document.getElementById("contact").style.display = "block";
-        }
+                if (loggedInUser === "TR") {
+                    document.getElementById("contact").style.display = "none"; // TR kann keine Strafen anlegen
+                } else {
+                    document.getElementById("contact").style.display = "block"; // Andere Benutzer können Strafen anlegen
+                }
 
-        anzeigenStrafen();
-        berechneGesamtBetrag();
-        }
+                anzeigenStrafen();
+                berechneGesamtBetrag();
+            } else {
+                // Wenn nicht eingeloggt, alles zurücksetzen
+                document.getElementById("about").style.display = "none";
+                document.getElementById("contact").style.display = "none";
+            }
         }
 
 
