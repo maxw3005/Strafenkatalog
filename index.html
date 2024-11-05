@@ -6,6 +6,8 @@
         <link rel="manifest" href="manifest.json">  <!-- Link zur Manifest-Datei -->
         <title>TSU Strafenkatalog</title>
         <link rel="stylesheet" href="styles.css">
+        import { initializeApp } from "firebase/app";
+        import { getAnalytics } from "firebase/analytics";
         <style>
         
             nav {
@@ -35,35 +37,35 @@
 
     <main>
         <section id="login">
-            <h2>Benutzeranmeldung</h2>
-            <form id="loginForm">
-                <label for="username">Benutzername:</label>
-                <input type="text" id="username" name="username" required>
-                
-                <label for="password">Passwort:</label>
-                <input type="password" id="password" name="password" required>
-                
-                <button type="button" onclick="login()">Einloggen</button>
-            </form>
-            <p id="loginMessage"></p>
-        </section>
-
+    <h2>Benutzeranmeldung</h2>
+    <form id="loginForm">
+        <label for="email">E-Mail:</label>
+        <input type="email" id="email" name="email" required>
+        
+        <label for="password">Passwort:</label>
+        <input type="password" id="password" name="password" required>
+        
+        <button type="button" onclick="login()">Einloggen</button>
+        <button type="button" onclick="register()">Registrieren</button>
+    </form>
+    <p id="loginMessage"></p>
+    </section>
         <section id="about">
             <h2>Offener Betrag</h2>
             <p>Gesamter Betrag der offenen Strafen: <span id="gesamtBetrag">0</span> Euro</p>
             <button onclick="logout()">Abmelden</button>
         </section>
 
-        <section id="contact" style="display:none;"> 
-            <h2>Strafe anlegen</h2>
-            <p>Wähle hier den Spieler und den Betrag</p>
-        
-            <form id="strafeFormular">
-                <label for="spielerSelect">Spieler:</label>
-                <select id="spielerSelect" name="spieler">
-                    <option value="" disabled selected>-- Wähle einen Spieler --</option>
-                    <option value="gerald">Gerald Probst</option>
-                    <option value="maximilianw">Maximilian Weber</option>
+       <section id="contact" style="display:none;"> 
+    <h2>Strafe anlegen</h2>
+    <p>Wähle hier den Spieler und den Betrag</p>
+
+    <form id="strafeFormular">
+        <label for="spielerSelect">Spieler:</label>
+        <select id="spielerSelect" name="spieler">
+            <option value="" disabled selected>-- Wähle einen Spieler --</option>
+            <option value="gerald">Gerald Probst</option>
+           <option value="maximilianw">Maximilian Weber</option>
                     <option value="manuelh">Manuel Hitzginger</option>
                     <option value="manueld">Manuel Duller</option>
                     <option value="alexanderd">Alexander Duller</option>
@@ -95,30 +97,41 @@
                     <option value="felizz">Feliz Zöhrer</option>
                     <option value="stefanp">Stefan Pommer</option>
                     <option value="andreas">Andreas Schießtl</option>
-                </select>
-        
-                <label for="betragSelect">Betrag:</label>
-                <select id="betragSelect" name="betrag">
-                    <option value="" disabled selected>-- Wähle einen Betrag --</option>
-                    <option value="5">5 Euro</option>
-                    <option value="10">10 Euro</option>
-                    <option value="20">20 Euro</option>
-                    <option value="30">30 Euro</option>
-                    <option value="50">50 Euro</option>
-                </select>
-                <button type="button" id="saveButton" onclick="speichern()">Speichern</button>
-            </form>
+        </select>
 
-            <h3>Aktuelle Strafen</h3>
-            <ul id="strafeListe"></ul>
-        </section>
-    </main>
+        <label for="betragSelect">Betrag:</label>
+        <select id="betragSelect" name="betrag">
+            <option value="" disabled selected>-- Wähle einen Betrag --</option>
+            <option value="5">5 Euro</option>
+            <option value="10">10 Euro</option>
+            <option value="20">20 Euro</option>
+            <option value="30">30 Euro</option>
+            <option value="50">50 Euro</option>
+        </select>
+        <button type="button" id="saveButton" onclick="speichern()">Speichern</button>
+    </form>
 
+    <h3>Aktuelle Strafen</h3>
+    <ul id="strafeListe"></ul>
+</section>
     <footer>
          <img src="Logo-TSU.png" alt="TSU Logo" style="max-width: 10%; height: auto;">
     </footer>
    
     <script>
+        const firebaseConfig = {
+          apiKey: "AIzaSyBerV92CvcARWufzkW1xm9AsqEIDbAtedE",
+          authDomain: "strafenkatalog-7b988.firebaseapp.com",
+          projectId: "strafenkatalog-7b988",
+          storageBucket: "strafenkatalog-7b988.firebasestorage.app",
+          messagingSenderId: "350258790405",
+          appId: "1:350258790405:web:5bc4622a84cc4918d19c6c",
+          measurementId: "G-THZGQRBN0Y"
+        };
+
+// Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
                 navigator.serviceWorker.register('service-worker.js').then(function(registration) {
@@ -183,45 +196,52 @@
 };
 
         // Überprüfen, ob der Benutzer angemeldet ist
-       function checkLoginStatus() {
-            const loggedInUser = localStorage.getItem('loggedInUser');
-            if (loggedInUser) {
-                document.getElementById("login").style.display = "none";
-                document.getElementById("about").style.display = "block";
-        
-                if (loggedInUser === "TR") {
-                    document.getElementById("contact").style.display = "none"; // TR kann keine Strafen anlegen
-                } else {
-                    document.getElementById("contact").style.display = "block"; // Andere Benutzer können Strafen anlegen
-                }
-
-                anzeigenStrafen();
-                berechneGesamtBetrag();
-            } else {
-                // Wenn nicht eingeloggt, alles zurücksetzen
-                document.getElementById("about").style.display = "none";
-                document.getElementById("contact").style.display = "none";
-            }
-        }
-
-
-        // Funktion für den Login
-        function login() {
-        const username = document.getElementById("username").value;
-        const password = document.getElementById("password").value;
+    
+    function register() {
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
         const loginMessage = document.getElementById("loginMessage");
 
-        if (users[username] && users[username] === password) {
-            loginMessage.textContent = "Login erfolgreich!";
-            localStorage.setItem('loggedInUser', username);
+        auth.createUserWithEmailAndPassword(email, password)
+            .then((userCredential) => {
+                // Benutzer erfolgreich registriert
+                loginMessage.textContent = "Registrierung erfolgreich!";
+                console.log("Benutzer registriert:", userCredential.user);
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                loginMessage.textContent = "Fehler: " + errorMessage;
+                console.error("Fehler bei der Registrierung:", error);
+            });
+    }
 
-        
-            document.getElementById("login").style.display = "none";
-        
-       
-            document.getElementById("about").style.display = "block";
-            anzeigenStrafen();
-            berechneGesamtBetrag();
+    function login() {
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const loginMessage = document.getElementById("loginMessage");
+
+        auth.signInWithEmailAndPassword(email, password)
+            .then((userCredential) => {
+                // Benutzer erfolgreich angemeldet
+                loginMessage.textContent = "Login erfolgreich!";
+                console.log("Benutzer eingeloggt:", userCredential.user);
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                loginMessage.textContent = "Fehler: " + errorMessage;
+                console.error("Fehler beim Login:", error);
+            });
+    }
+
+    function logout() {
+        auth.signOut().then(() => {
+            console.log("Benutzer abgemeldet");
+            document.getElementById("loginMessage").textContent = "Erfolgreich abgemeldet.";
+        });
+    }
+
 
         
         if (username === "TR") {
@@ -236,21 +256,27 @@
         }
         }
 
-        function speichern() {
-            const spieler = document.getElementById("spielerSelect").value;
-            const betrag = parseInt(document.getElementById("betragSelect").value);
+       function speichern() {
+        const spieler = document.getElementById("spielerSelect").value;
+        const betrag = parseInt(document.getElementById("betragSelect").value);
+        const loggedInUser = auth.currentUser.email; // Aktueller Benutzer
 
-            if (strafen[spieler]) {
-                strafen[spieler].betrag += betrag;
-            }
-
-            // Speichern der Strafen im Local Storage
-            localStorage.setItem('strafen', JSON.stringify(strafen));
-
-            document.getElementById("strafeFormular").reset();
-            anzeigenStrafen();
-            berechneGesamtBetrag();
+        if (spieler && betrag) {
+            db.collection('strafen').add({
+                spieler: spieler,
+                betrag: betrag,
+                benutzer: loggedInUser,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            })
+            .then(() => {
+                console.log("Strafe erfolgreich gespeichert!");
+                anzeigenStrafen(); // Aktualisiere die Anzeige
+            })
+            .catch((error) => {
+                console.error("Fehler beim Speichern der Strafe:", error);
+            });
         }
+    }
 
         function zuruecksetzenStrafe(spieler) {
             if (strafen[spieler]) {
@@ -265,27 +291,23 @@
         }
 
 
-        function anzeigenStrafen() {
-        const strafeListe = document.getElementById("strafeListe");
-        strafeListe.innerHTML = ""; 
+    function anzeigenStrafen() {
+    const strafeListe = document.getElementById("strafeListe");
+    strafeListe.innerHTML = ""; // Leere die Liste, bevor neue Daten hinzugefügt werden
 
-        for (let key in strafen) {
-        // Überprüfen, ob der Betrag größer als 0 ist
-            if (strafen[key].betrag > 0) {
+    // Abfragen der Strafen aus Firestore
+    db.collection('strafen').orderBy("timestamp", "desc").onSnapshot((snapshot) => {
+        snapshot.forEach((doc) => {
+            const data = doc.data();
             const eintrag = document.createElement("li");
-            eintrag.textContent = `${strafen[key].name}: ${strafen[key].betrag} Euro`;
-
-            const resetButton = document.createElement("button");
-            resetButton.textContent = "Zurücksetzen";
-            resetButton.onclick = function() {
-                zuruecksetzenStrafe(key);
-            };
-
-            eintrag.appendChild(resetButton);
-            strafeListe.appendChild(eintrag);
-            }
-        }
+            eintrag.textContent = `Spieler: ${data.spieler}, Betrag: ${data.betrag} Euro (Hinzugefügt von: ${data.benutzer})`;
+            strafeListe.appendChild(eintrag); // Füge den neuen Eintrag zur Liste hinzu
+        });
+    }, (error) => {
+        console.error("Fehler beim Abrufen der Strafen:", error);
+    });
     }
+
 
 
     function berechneGesamtBetrag() {
