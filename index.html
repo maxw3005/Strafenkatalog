@@ -1,36 +1,108 @@
 <!DOCTYPE html>
 <html lang="de">
-    <head>
+ <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="manifest" href="manifest.json">  <!-- Link zur Manifest-Datei -->
+        <link rel="manifest" href="manifest.json">
         <title>TSU Strafenkatalog</title>
         <link rel="stylesheet" href="styles.css">
         <style>
-        
+            /* Grundlegendes Styling für Desktop */
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            header, footer {
+                text-align: center;
+                padding: 15px;
+                background-color: #f4f4f4;
+            }
+
             nav {
                 background-color: #333;
                 padding: 10px;
+                text-align: center;
             }
+            
             nav a {
                 color: white;
                 margin: 0 15px;
                 text-decoration: none;
             }
+
             nav a:hover {
                 text-decoration: underline;
+            }
+
+            main {
+                padding: 20px;
+                max-width: 800px;
+                margin: 0 auto;
+            }
+
+            form {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            input, select, button {
+                padding: 8px;
+                font-size: 1em;
+                margin: 5px 0;
+                width: 100%;
+                max-width: 300px;
+            }
+
+            #strafeListe button {
+                margin-top: 5px;
+            }
+
+            /* Responsive Styling für Mobilgeräte */
+            @media (max-width: 600px) {
+                body {
+                    font-size: 0.9em;
+                }
+
+                nav a {
+                    display: block;
+                    margin: 5px 0;
+                }
+
+                header h1 {
+                    font-size: 1.5em;
+                }
+
+                img {
+                    max-width: 80%;
+                    height: auto;
+                }
+
+                /* Optimierung des Formulare für schmale Bildschirme */
+                input, select, button {
+                    width: 100%;
+                    max-width: 100%;
+                }
+
+                #strafeListe {
+                    padding: 0;
+                    font-size: 0.9em;
+                }
             }
         </style>
     </head>
 <body>
     <header>
         <h1>TSU Strafenkatalog</h1>
-        <img src="Logo-TSU.png" alt="TSU Logo" style="max-width: 10%; height: auto;">
+        <img src="Logo-TSU.png" alt="TSU Logo" style="max-width: 150px;">
     </header>
 
     <nav>
-        <a href="TSU-Strafen.pdf" target="_blank">Strafenkatalog</a> >
-        <a href="TSU-Geburtstagskalender.pdf" target="_blank">Geburtstagskalender</a> >
+        <a href="TSU-Strafen.pdf" target="_blank">Strafenkatalog</a>
+        <a href="TSU-Geburtstagskalender.pdf" target="_blank">Geburtstagskalender</a>
     </nav>
 
     <main>
