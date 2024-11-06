@@ -336,12 +336,14 @@
 
 
         function anzeigenStrafen() {
-        const strafeListe = document.getElementById("strafeListe");
-        strafeListe.innerHTML = ""; 
+    const strafeListe = document.getElementById("strafeListe");
+    strafeListe.innerHTML = ""; 
 
-        for (let key in strafen) {
-        // Überprüfen, ob der Betrag größer als 0 ist
-            if (strafen[key].betrag > 0) {
+    let hatStrafen = false; // Flag, um zu überprüfen, ob es Strafen gibt
+
+    for (let key in strafen) {
+        if (strafen[key].betrag > 0) { // Nur Einträge mit einem Betrag größer als 0 anzeigen
+            hatStrafen = true; // Es gibt mindestens eine Strafe
             const eintrag = document.createElement("li");
             eintrag.textContent = `${strafen[key].name}: ${strafen[key].betrag} Euro`;
 
@@ -353,9 +355,16 @@
 
             eintrag.appendChild(resetButton);
             strafeListe.appendChild(eintrag);
-            }
         }
     }
+
+    // Wenn es keine Strafen gibt, Text anzeigen
+    if (!hatStrafen) {
+        const keinEintrag = document.createElement("li");
+        keinEintrag.textContent = "Keine aktuellen Strafen vorhanden";
+        strafeListe.appendChild(keinEintrag);
+    }
+}
 
 
     function berechneGesamtBetrag() {
