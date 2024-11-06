@@ -328,57 +328,61 @@
         }
         }
 
-        function speichern() {
-                const spieler = document.getElementById("spielerSelect").value;
-                const vergehen = document.getElementById("vergehenSelect").value;
-                const betrag = vergehenBetrag[vergehen]; // Betrag automatisch vom Vergehen festlegen
-            
-                if (strafen[spieler]) {
-                    strafen[spieler].betrag += betrag;
-                }
-            
-                // Speichern der Strafen im Local Storage
-                localStorage.setItem('strafen', JSON.stringify(strafen));
-            
-                document.getElementById("strafeFormular").reset();
-                anzeigenStrafen();
-                berechneGesamtBetrag();
-            }
-        function zuruecksetzenStrafe(spieler) {
-            if (strafen[spieler]) {
-                strafen[spieler].betrag = 0;
-            }
+       async function speichern() {
+    const spieler = document.getElementById("spielerSelect").value;
+    const vergehen = document.getElementById("vergehenSelect").value;
+    const betrag = vergehenBetrag[vergehen];
 
-            // Speichern der Strafen im Local Storage
-            localStorage.setItem('strafen', JSON.stringify(strafen));
+    await fetch("http://localhost:3000/api/strafen", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ spieler, betrag })
+    });
 
-            anzeigenStrafen();
-            berechneGesamtBetrag();
-        }
+    anzeigenStrafen();
+    berechneGesamtBetrag();
+}
+
+        async function zuruecksetzenStrafe(spieler) {
+    await fetch("http://localhost:3000/api/strafen/reset", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ spieler })
+    });
+
+    anzeigenStrafen();
+    berechneGesamtBetrag();
+}
 
 
-        function anzeigenStrafen() {
+    async function anzeigenStrafen() {
+    const response = await fetch("http://localhost:3000/api/strafen");
+    const data = await response.json();
     const strafeListe = document.getElementById("strafeListe");
-    strafeListe.innerHTML = ""; 
+    strafeListe.innerHTML = "";
 
-    let hatStrafen = false; // Flag, um zu überprüfen, ob es Strafen gibt
-
-    for (let key in strafen) {
-        if (strafen[key].betrag > 0) { // Nur Einträge mit einem Betrag größer als 0 anzeigen
-            hatStrafen = true; // Es gibt mindestens eine Strafe
+    let hatStrafen = false;
+    for (let spieler in data) {
+        if (data[spieler].betrag > 0) {
+            hatStrafen = true;
             const eintrag = document.createElement("li");
-            eintrag.textContent = `${strafen[key].name}: ${strafen[key].betrag} Euro`;
+            eintrag.textContent = `${data[spieler].name}: ${data[spieler].betrag} Euro`;
 
             const resetButton = document.createElement("button");
             resetButton.textContent = "Zurücksetzen";
-            resetButton.onclick = function() {
-                zuruecksetzenStrafe(key);
-            };
-
+            resetButton.onclick = () => zuruecksetzenStrafe(spieler);
             eintrag.appendChild(resetButton);
             strafeListe.appendChild(eintrag);
         }
     }
+
+    if (!hatStrafen) {
+        const keinEintrag = document.createElement("li");
+        keinEintrag.textContent = "Keine aktuellen Strafen vorhanden";
+        strafeListe.appendChild(keinEintrag);
+    }
+}
+
 
     // Wenn es keine Strafen gibt, Text anzeigen
     if (!hatStrafen) {
@@ -389,14 +393,17 @@
 }
 
 
-    function berechneGesamtBetrag() {
-        let gesamt = 0;
-        for (let key in strafen) {
-            gesamt += strafen[key].betrag;
-        }
+    async function berechneGesamtBetrag() {
+    const response = await fetch("http://localhost:3000/api/strafen");
+    const data = await response.json();
 
-        document.getElementById("gesamtBetrag").textContent = gesamt;
+    let gesamt = 0;
+    for (let spieler in data) {
+        gesamt += data[spieler].betrag;
     }
+
+    document.getElementById("gesamtBetrag").textContent = gesamt;
+}
 
     // Funktion zum Abmelden
     function logout() {
