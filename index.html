@@ -167,14 +167,21 @@
                     <option value="andreas">Andreas Schießtl</option>
                 </select>
         
-                <label for="betragSelect">Betrag:</label>
-                <select id="betragSelect" name="betrag">
-                    <option value="" disabled selected>-- Wähle einen Betrag --</option>
-                    <option value="5">5 Euro</option>
-                    <option value="10">10 Euro</option>
-                    <option value="20">20 Euro</option>
-                    <option value="30">30 Euro</option>
-                    <option value="50">50 Euro</option>
+               <label for="vergehenSelect">Vergehen:</label>
+                <select id="vergehenSelect" name="vergehen">
+                    <option value="" disabled selected>-- Wähle ein Vergehen --</option>
+                    <option value="Zu spät Training">Zu spät Training - 5 Euro</option>
+                    <option value="Ball ohne Luft">Ball ohne Luft - 2 Euro</option>
+                    <option value="Unentschuldigt nicht im Training">Unentschuldigt nicht im Training - 10 Euro</option>
+                    <option value="Zu spät Spiel">Zu spät Spiel - 10 Euro</option>
+                    <option value="Handyklingeln während Besprechung">Handyklingeln während Besprechung - 5 Euro</option>
+                    <option value="Ohne TSU Dresscode beim Spiel">Ohne TSU Dresscode beim Spiel - 5 Euro</option>
+                    <option value="Rauchen im Trikot">Rauchen im Trikot - 10 Euro</option>
+                    <option value="Kabinendienst nicht erledigt Training">Kabinendienst nicht erledigt Training - 10 Euro</option>
+                    <option value="Kabinendienst nicht erledigt Spiel">Kabinendienst nicht erledigt Spiel - 30 Euro</option>
+                    <option value="Gelbe Karte Unsportlichkeit/Meckern">Gelbe Karte Unsportlichkeit/Meckern - 10 Euro</option>
+                    <option value="Gelb-Rote Karte Unsportlichkeit/Meckern">Gelb-Rote Karte Unsportlichkeit/Meckern - 30 Euro</option>
+                    <option value="Rote Karte Unsportlichkeit/Meckern">Rote Karte Unsportlichkeit/Meckern - 50 Euro</option>
                 </select>
                 <button type="button" id="saveButton" onclick="speichern()">Speichern</button>
             </form>
@@ -189,6 +196,21 @@
     </footer>
    
     <script>
+         const vergehenBetrag = {
+            "Zu spät Training": 5,
+            "Ball ohne Luft": 2,
+            "Unentschuldigt nicht im Training": 10,
+            "Zu spät Spiel": 10,
+            "Handyklingeln während Besprechung": 5,
+            "Ohne TSU Dresscode beim Spiel": 5,
+            "Rauchen im Trikot": 10,
+            "Kabinendienst nicht erledigt Training": 10,
+            "Kabinendienst nicht erledigt Spiel": 30,
+            "Gelbe Karte Unsportlichkeit/Meckern": 10,
+            "Gelb-Rote Karte Unsportlichkeit/Meckern": 30,
+            "Rote Karte Unsportlichkeit/Meckern": 50,
+        };
+        
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
                 navigator.serviceWorker.register('service-worker.js').then(function(registration) {
@@ -307,21 +329,21 @@
         }
 
         function speichern() {
-            const spieler = document.getElementById("spielerSelect").value;
-            const betrag = parseInt(document.getElementById("betragSelect").value);
-
-            if (strafen[spieler]) {
-                strafen[spieler].betrag += betrag;
+                const spieler = document.getElementById("spielerSelect").value;
+                const vergehen = document.getElementById("vergehenSelect").value;
+                const betrag = vergehenBetrag[vergehen]; // Betrag automatisch vom Vergehen festlegen
+            
+                if (strafen[spieler]) {
+                    strafen[spieler].betrag += betrag;
+                }
+            
+                // Speichern der Strafen im Local Storage
+                localStorage.setItem('strafen', JSON.stringify(strafen));
+            
+                document.getElementById("strafeFormular").reset();
+                anzeigenStrafen();
+                berechneGesamtBetrag();
             }
-
-            // Speichern der Strafen im Local Storage
-            localStorage.setItem('strafen', JSON.stringify(strafen));
-
-            document.getElementById("strafeFormular").reset();
-            anzeigenStrafen();
-            berechneGesamtBetrag();
-        }
-
         function zuruecksetzenStrafe(spieler) {
             if (strafen[spieler]) {
                 strafen[spieler].betrag = 0;
